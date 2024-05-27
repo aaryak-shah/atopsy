@@ -1,0 +1,641 @@
+rawheader<480B> {
+    magic           u32
+    aversion        u16
+    ~future1        u16
+    ~future2        u16
+    rawheadlen      u16
+    rawreclen       u16
+    hertz           u16
+    pidwidth        u16
+    ~sfuture        u16[5]
+    sstatlen        u32
+    tstatlen        u32
+    utsname         utsname<sys 390B>
+    ~cfuture        i8[8]
+    pagesize        u32
+    supportflags    i32
+    osrel           i32
+    osvers          i32
+    ossub           i32
+    ~ifuture        i32[5]
+}
+
+rawrecord<96B> {
+    curtime     time_t<sys 8B>
+    flags       u16
+    ncgroups    u16
+    ~sfuture    u16[2]
+    scomplen    u32
+    pcomplen    u32
+    interval    u32
+    ndeviat     u32
+    nactproc    u32
+    ntask       u32
+    totproc     u32
+    totrun      u32
+    totslpi     u32
+    totslpu     u32
+    totzomb     u32
+    nexit       u32
+    noverflow   u32
+    totidle     u32
+    ccomplen    u32
+    coriglen    u32
+    ncgpids     u32
+    icomplen    u32
+    ~ifuture    u32
+}
+
+sstat<1064016B> {
+    cpu     cpustat {
+                nrcpu       i64
+                devint      i64
+                csw         i64
+                nprocs      i64
+                lavg1       i32
+                lavg5       i32
+                lavg15      i32
+                ~cfuture    i64[4]
+                all         percpu {
+                                cpunr       i32
+                                stime       i64
+                                utime       i64
+                                ntime       i64
+                                itime       i64
+                                wtime       i64
+                                Itime       i64
+                                Stime       i64
+                                steal       i64
+                                guest       i64
+                                freqcnt     freqcnt {
+                                                maxfreq i64
+                                                cnt     i64
+                                                ticks   i64
+                                            }
+                                instr       i64
+                                cycle       i64
+                                ~cfuture    i64[6]
+                            }
+                cpu         percpu[2048]
+            }
+    mem     memstat {
+                physmem         i64
+                freemem         i64
+                buffermem       i64
+                slabmem         i64
+                cachemem        i64
+                cachedrt        i64
+                totswap         i64
+                freeswap        i64
+                pgscans         i64
+                pgsteal         i64
+                allocstall      i64
+                swouts          i64
+                swins           i64
+                tcpsock         i64
+                udpsock         i64
+                commitlim       i64
+                committed       i64
+                shmem           i64
+                shmrss          i64
+                shmswp          i64
+                slabreclaim     i64
+                stothugepage    i64
+                sfreehugepage   i64
+                shugepagesz     i64
+                vmwballoon      i64
+                zfsarcsize      i64
+                swapcached      i64
+                ksmsharing      i64
+                ksmshared       i64
+                zswapped        i64
+                zswap           i64
+                oomkills        i64
+                compactstall    i64
+                pgmigrate       i64
+                numamigrate     i64
+                pgouts          i64
+                pgins           i64
+                pagetables      i64
+                zswouts         i64
+                zswins          i64
+                ltothugepage    i64
+                lfreehugepage   i64
+                lhugepagesz     i64
+                availablemem    i64
+                anonhugepage    i64
+                ~cfuture        i64[5]
+            }
+    net     netstat {
+                ipv4    ipv4_stats {
+                            Forwarding      i64
+                            DefaultTTL      i64
+                            InReceives      i64
+                            InHdrErrors     i64
+                            InAddrErrors    i64
+                            ForwDatagrams   i64
+                            InUnknownProtos i64
+                            InDiscards      i64
+                            InDelivers      i64
+                            OutRequests     i64
+                            OutDiscards     i64
+                            OutNoRoutes     i64
+                            ReasmTimeout    i64
+                            ReasmReqds      i64
+                            ReasmOKs        i64
+                            ReasmFails      i64
+                            FragOKs         i64
+                            FragFails       i64
+                            FragCreates     i64
+                        }
+                icmpv4  icmpv4_stats {
+                            InMsgs              i64
+                            InErrors            i64
+                            InCsumErrors        i64
+                            InDestUnreachs      i64
+                            InTimeExcds         i64
+                            InParmProbs         i64
+                            InSrcQuenchs        i64
+                            InRedirects         i64
+                            InEchos             i64
+                            InEchoReps          i64
+                            InTimestamps        i64
+                            InTimestampReps     i64
+                            InAddrMasks         i64
+                            InAddrMaskReps      i64
+                            OutMsgs             i64
+                            OutErrors           i64
+                            OutDestUnreachs     i64
+                            OutTimeExcds        i64
+                            OutParmProbs        i64
+                            OutSrcQuenchs       i64
+                            OutRedirects        i64
+                            OutEchos            i64
+                            OutEchoReps         i64
+                            OutTimestamps       i64
+                            OutTimestampReps    i64
+                            OutAddrMasks        i64
+                            OutAddrMaskReps     i64
+                        }
+                udpv4   udpv4_stats {
+                            InDatagrams     i64
+                            NoPorts         i64
+                            InErrors        i64
+                            OutDatagrams    i64
+                        }
+                ipv6    ipv6_stats {
+                            Ip6InReceives       i64
+                            Ip6InHdrErrors      i64
+                            Ip6InTooBigErrors   i64
+                            Ip6InNoRoutes       i64
+                            Ip6InAddrErrors     i64
+                            Ip6InUnknownProtos  i64
+                            Ip6InTruncatedPkts  i64
+                            Ip6InDiscards       i64
+                            Ip6InDelivers       i64
+                            Ip6OutForwDatagrams i64
+                            Ip6OutRequests      i64
+                            Ip6OutDiscards      i64
+                            Ip6OutNoRoutes      i64
+                            Ip6ReasmTimeout     i64
+                            Ip6ReasmReqds       i64
+                            Ip6ReasmOKs         i64
+                            Ip6ReasmFails       i64
+                            Ip6FragOKs          i64
+                            Ip6FragFails        i64
+                            Ip6FragCreates      i64
+                            Ip6InMcastPkts      i64
+                            Ip6OutMcastPkts     i64
+                        }
+                icmpv6  icmpv6_stats {
+                            Icmp6InMsgs                     i64
+                            Icmp6InErrors                   i64
+                            Icmp6InDestUnreachs             i64
+                            Icmp6InPktTooBigs               i64
+                            Icmp6InTimeExcds                i64
+                            Icmp6InParmProblems             i64
+                            Icmp6InEchos                    i64
+                            Icmp6InEchoReplies              i64
+                            Icmp6InGroupMembQueries         i64
+                            Icmp6InGroupMembResponses       i64
+                            Icmp6InGroupMembReductions      i64
+                            Icmp6InRouterSolicits           i64
+                            Icmp6InRouterAdvertisements     i64
+                            Icmp6InNeighborSolicits         i64
+                            Icmp6InNeighborAdvertisements   i64
+                            Icmp6InRedirects                i64
+                            Icmp6OutMsgs                    i64
+                            Icmp6OutDestUnreachs            i64
+                            Icmp6OutPktTooBigs              i64
+                            Icmp6OutTimeExcds               i64
+                            Icmp6OutParmProblems            i64
+                            Icmp6OutEchoReplies             i64
+                            Icmp6OutRouterSolicits          i64
+                            Icmp6OutNeighborSolicits        i64
+                            Icmp6OutNeighborAdvertisements  i64
+                            Icmp6OutRedirects               i64
+                            Icmp6OutGroupMembResponses      i64
+                            Icmp6OutGroupMembReductions     i64
+                        }
+                udpv6   udpv6_stats {
+                            Udp6InDatagrams     i64
+                            Udp6NoPorts         i64
+                            Udp6InErrors        i64
+                            Udp6OutDatagrams    i64
+                        }
+                tcp     tcp_stats {
+                            RtoAlgorithm    i64
+                            RtoMin          i64
+                            RtoMax          i64
+                            MaxConn         i64
+                            ActiveOpens     i64
+                            PassiveOpens    i64
+                            AttemptFails    i64
+                            EstabResets     i64
+                            CurrEstab       i64
+                            InSegs          i64
+                            OutSegs         i64
+                            RetransSegs     i64
+                            InErrs          i64
+                            OutRsts         i64
+                            InCsumErrors    i64
+                        }
+            }
+    intf    intfstat {
+                nrintf  i32
+                intf    perintf[128] {
+                            name        char[16]
+                            rbyte       i64
+                            rpack       i64
+                            rerrs       i64
+                            rdrop       i64
+                            rfifo       i64
+                            rframe      i64
+                            rcompr      i64
+                            rmultic     i64
+                            ~rfuture    i64[4]
+                            sbyte       i64
+                            spack       i64
+                            serrs       i64
+                            sdrop       i64
+                            sfifo       i64
+                            scollis     i64
+                            scarrier    i64
+                            scompr      i64
+                            ~sfuture    i64[4]
+                            type        char
+                            speed       i32
+                            speedp      i32
+                            duplex      char
+                            ~cfuture    i64[4]
+                        }
+            }
+    memnuma memnuma {
+                nrnuma  i64
+                numa    mempernuma[1024] {
+                            numanr      i32
+                            frag        f32
+                            totmem      i64
+                            freemem     i64
+                            filepage    i64
+                            dirtymem    i64
+                            slabmem     i64
+                            slabreclaim i64
+                            active      i64
+                            inactive    i64
+                            shmem       i64
+                            tothp       i64
+                            freehp      i64
+                            ~cfuture    i64[2]
+                        }
+            }
+    cpunuma cpunuma {
+                nrnuma  i64
+                numa    cpupernuma[1024] {
+                            numanr      i32
+                            nrcpu       i64
+                            stime       i64
+                            utime       i64
+                            ntime       i64
+                            itime       i64
+                            wtime       i64
+                            Itime       i64
+                            Stime       i64
+                            steal       i64
+                            guest       i64
+                            ~cfuture    i64[2]
+                        }
+            }
+    dsk     dskstat {
+                ndsk    i32
+                nmdd    i32
+                nlvm    i32
+                dsk     perdsk[1024] {
+                            name        char[32]
+                            nread       i64
+                            nrsect      i64
+                            nwrite      i64
+                            nwsect      i64
+                            io_ms       i64
+                            avque       i64
+                            ndisc       i64
+                            ndsect      i64
+                            inflight    i64
+                            ~cfuture    i64[3]
+                        }
+                mdd     perdsk[256]
+                lvm     perdsk[2048]
+            }
+    nfs     nfsstat {
+                server      server {
+                                netcnt      i64
+                                netudpcnt   i64
+                                nettcpcnt   i64
+                                nettcpcon   i64
+                                rpccnt      i64
+                                rpcbadfmt   i64
+                                rpcbadaut   i64
+                                rpcbadcln   i64
+                                rpcread     i64
+                                rpcwrite    i64
+                                rchits      i64
+                                rcmiss      i64
+                                rcnoca      i64
+                                nrbytes     i64
+                                nwbytes     i64
+                                ~future     i64[8]
+                            }
+                client      client {
+                                rpccnt          i64
+                                rpcretrans      i64
+                                rpcautrefresh   i64
+                                rpcread         i64
+                                rpcwrite        i64
+                                ~future         i64[8]
+                            }
+                nfsmounts   nfsmounts {
+                                nrmounts    i32
+                                nfsmnt      pernfsmount[64] {
+                                                mountdev        char[128]
+                                                age             i64
+                                                bytesread       i64
+                                                byteswrite      i64
+                                                bytesdread      i64
+                                                bytesdwrite     i64
+                                                bytestotread    i64
+                                                bytestotwrite   i64
+                                                pagesmread      i64
+                                                pagesmwrite     i64
+                                                ~future         i64[8]
+                                            }
+                            }
+            }
+    cfs     contstat {
+                nrcontainer i32
+                cont        percontainer[128] {
+                                ctid        u32
+                                numproc     u32
+                                system      i64
+                                user        i64
+                                nice        i64
+                                uptime      i64
+                                physpages   i64
+                            }
+            }
+    psi     pressure {
+                present i8<bool>
+                ~future i8[3]
+                cpusome psi {
+                            avg10   f32
+                            avg60   f32
+                            avg300  f32
+                            total   i64
+                        }
+                memsome psi
+                memfull psi
+                iosome  psi
+                iofull  psi
+            }
+    gpu     gpustat {
+                nrgpus  i32
+                gpu     pergpu[32] {
+                            taskstats       i8<bool>
+                            nrprocs         u8
+                            type            char[13]
+                            busid           char[13]
+                            gpunr           i32
+                            gpupercnow      i32
+                            mempercnow      i32
+                            memtotnow       i64
+                            memusenow       i64
+                            samples         i64
+                            gpuperccum      i64
+                            memperccum      i64
+                            memusecum       i64
+                        }
+            }
+    ifb     ifbstat {
+                nrports i32
+                ifb     perifb[32] {
+                            ibname      char[12]
+                            portnr      i16
+                            lanes       i16
+                            rate        i64
+                            rcvb        i64
+                            sndb        i64
+                            rcvp        i64
+                            sndp        i64
+                            ~cfuture    i64[4]
+                        }
+            }
+    llc     llcstat {
+                nrllcs  i32
+                perllc  perllc[256] {
+                    id          u8
+                    occupancy   f32
+                    mbm_local   i64
+                    mbm_total   i64
+                }
+
+            }
+    www     wwwstat {
+                accesses    i64
+                totkbytes   i64
+                uptime      i64
+                bworkers    i32
+                iworkers    i32
+            }
+}
+
+cgchainer<48B> {
+    next        &cgchainer
+    hashnext    &cgchainer
+    cstat       &cstat<432B> {
+                    gen     cggen {
+                                structlen   i32
+                                sequence    i32
+                                parentseq   i32
+                                depth       i32
+                                nprocs      i32
+                                procsbelow  i32
+                                namelen     i32
+                                fullnamelen i32
+                                ~ifuture    i32[4]
+                                namehash    i32
+                                ~lfuture    i32[4]
+                            }
+                    conf    cgconf {
+                                cpuweight   i32
+                                cpumax      i32
+                                memmax      i64
+                                swpmax      i64
+                                dskweight   i32
+                                ~ifuture    i32[5]
+                                ~cfuture    i64[5]
+                            }
+                    cpu     cgcpu {
+                                utime       i64
+                                stime       i64
+                                somepres    i64
+                                fullpres    i64
+                                ~cfuture    i64[5]
+                            }
+                    mem     cgmem {
+                                current     i64
+                                anon        i64
+                                file        i64
+                                kernel      i64
+                                shmem       i64
+                                somepres    i64
+                                fullpres    i64
+                                ~cfuture    i64[5]
+                            }
+                    dsk     cgdsk {
+                                rbytes      i64
+                                wbytes      i64
+                                rios        i64
+                                wios        i64
+                                somepres    i64
+                                fullpres    i64
+                                ~cfuture    i64[5]
+                            }
+                    cgname  char[?]
+                }
+    proclist    &pid_t<sys i32>
+    vlinemask   u32
+    stub        i8<bool>
+}
+
+devtstat<96B> {
+    taskall     &tstat<968B> {
+                    gen gen {
+                        tgid        i32
+                        pid         i32
+                        ppid        i32
+                        ruid        i32
+                        euid        i32
+                        suid        i32
+                        fsuid       i32
+                        rgid        i32
+                        egid        i32
+                        sgid        i32
+                        fsgid       i32
+                        nthr        i32
+                        name        char[16]
+                        isproc      i8<bool>
+                        state       i8
+                        excode      i32
+                        btime       time_t<sys 8B>
+                        elaps       time_t<sys 8B>
+                        cmdline     char[256]
+                        nthrslpi    i32
+                        nthrslpu    i32
+                        nthrrun     i32
+                        nthridle    i32
+                        ctid        i32
+                        vpid        i32
+                        wasinactive i32
+                        utsname     char[16]
+                        cgroupix    i32
+                        ~ifuture    i32[4]
+                    }
+                    cpu cpu {
+                        utime       i64
+                        stime       i64
+                        nice        i32
+                        prio        i32
+                        rtprio      i32
+                        policy      i32
+                        curcpu      i32
+                        sleepavg    i32
+                        ~ifuture    i32[6]
+                        wchan       char[16]
+                        rundelay    i64
+                        blkdelay    i64
+                        nvcsw       i64
+                        nivcsw      i64
+                        ~cfuture    i64[3]
+                    }
+                    dsk dsk {
+                        rio         i64
+                        rsz         i64
+                        wio         i64
+                        wsz         i64
+                        cwsz        i64
+                        ~cfuture    i64[4]
+                    }
+                    mem mem {
+                        minflt      i64
+                        majflt      i64
+                        vexec       i64
+                        vmem        i64
+                        rmem        i64
+                        pmem        i64
+                        vgrow       i64
+                        rgrow       i64
+                        vdata       i64
+                        vstack      i64
+                        vlibs       i64
+                        vswap       i64
+                        vlock       i64
+                        ~cfuture    i64[7]
+                    }
+                    net net {
+                        tcpsnd      i64
+                        tcpssz      i64
+                        tcprcv      i64
+                        tcprsz      i64
+                        udpsnd      i64
+                        udpssz      i64
+                        udprcv      i64
+                        udprsz      i64
+                        avail1      i64
+                        avail2      i64
+                        ~cfuture    i64[4]
+                    }
+                    gpu gpu {
+                        state       i8
+                        ~bfuture    i8[3]
+                        nrgpus      i16
+                        gpulist     i32
+                        gpubusy     i32
+                        membusy     i32
+                        timems      i64
+                        memnow      i64
+                        memcum      i64
+                        sample      i64
+                        ~cfuture    i64[3]
+                    }
+                }
+    procall     &&tstat
+    procactive  &&tstat
+    ntaskall    u32
+    ntaskactive u32
+    nprocall    u32
+    nprocactive u32
+    totrun      u32
+    totslpi     u32
+    totslpu     u32
+    totidle     u32
+    totzombie   u32
+}
