@@ -17,6 +17,7 @@ rawheader<480B> {
     osrel           i32
     osvers          i32
     ossub           i32
+    cstatlength     i32
     ~ifuture        i32[5]
 }
 
