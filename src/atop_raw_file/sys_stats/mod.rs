@@ -11,7 +11,7 @@ pub mod numa_stats;
 pub mod pressure;
 pub mod www_stats;
 
-use std::io::Read;
+use std::{io::Read, mem::size_of};
 
 use crate::constants::SYS_STATS_SIZE;
 use container_stats::ContStat;
@@ -31,13 +31,13 @@ use www_stats::WwwStat;
 #[derive(Debug)]
 #[repr(C)]
 pub struct SysStats {
-    cpu_stats: CpuStats,
-    mem_stats: MemStats,
+    pub cpu_stats: CpuStats,
+    pub mem_stats: MemStats,
     net_stats: NetStats,
-    interface_stats: IntfStat,
+    pub interface_stats: IntfStat,
     memnuma: MemNuma,
     cpunuma: CpuNuma,
-    dsk: DskStat,
+    pub dsk: DskStat,
     nfs: NfsStat,
     cfs: ContStat,
     psi: Pressure,
@@ -49,13 +49,14 @@ pub struct SysStats {
 
 impl SysStats {
     pub unsafe fn from(compressed: Vec<u8>) -> Self {
-        let mut sys_stats_buffer = [0u8; SYS_STATS_SIZE];
+        println!("compressed length: {}", compressed.len());
+        let mut sys_stats_buffer = [0u8; size_of::<SysStats>()];
         let mut decompresser = Decompress::new(true);
         decompresser
             .decompress(
                 &compressed.as_slice(),
                 &mut sys_stats_buffer,
-                flate2::FlushDecompress::None,
+                flate2::FlushDecompress::Sync,
             )
             .unwrap();
         std::mem::transmute(sys_stats_buffer)

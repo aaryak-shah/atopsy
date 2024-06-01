@@ -2,8 +2,7 @@ pub mod sys_stats;
 pub mod utsname;
 
 use std::{
-    fs::File,
-    io::{BufReader, Read},
+    fs::File, io::{BufReader, Read}, mem::size_of
 };
 
 use sys_stats::SysStats;
@@ -110,6 +109,12 @@ pub fn parse_raw_file(file_path: &str) {
     loop {
         let raw_record = read_raw_record(&mut buf_reader);
         let sys_stats = read_sys_stats(&mut buf_reader, raw_record.sys_stats_compressed_length);
+
+        if (raw_header.sys_stats_length != size_of::<SysStats>() as u32) {
+            panic!("mismatching length {}", raw_header.sys_stats_length)
+        }
+
+        println!("{:#?}", (sys_stats.mem_stats.physmem) * (raw_header.page_size as i64 / 1024) /1024);
         break;
     }
 }

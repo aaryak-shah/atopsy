@@ -30,7 +30,7 @@ struct PerCpuStats {
 #[derive(Debug)]
 #[repr(C)]
 pub struct CpuStats {
-    cpu_count: i64,
+    pub cpu_count: i64,
     device_interrupts_count: i64,
     context_switch_count: i64,
     started_procs_count: i64,

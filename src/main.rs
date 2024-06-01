@@ -24,7 +24,7 @@ pub mod constants;
 pub mod utils;
 
 fn main() {
-    let file_path = "./atop.raw";
+    let file_path = "./atop-new.raw";
     atop_raw_file::parse_raw_file(file_path);
     // println!("size of sstat = {}", size_of::<SysStats>());
     // println!("size of cpustat = {}", size_of::<CpuStats>());

@@ -1,7 +1,7 @@
 #[derive(Debug)]
 #[repr(C)]
 pub struct PerIntf {
-    name: [i8; 16],
+    pub name: [i8; 16],
     rbyte: i64,
     rpack: i64,
     rerrs: i64,
@@ -31,7 +31,7 @@ pub struct PerIntf {
 #[repr(C)]
 pub struct IntfStat {
     nrintf: i32,
-    intf: [PerIntf; 128],
+    pub intf: [PerIntf; 128],
 }
 
 #[derive(Debug)]

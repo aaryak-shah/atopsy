@@ -1,7 +1,7 @@
 #[derive(Debug)]
 #[repr(C)]
 pub struct MemStats {
-    physmem: i64,       // number of physical pages
+    pub physmem: i64,       // number of physical pages
     freemem: i64,       // number of free     pages
     buffermem: i64,     // number of buffer   pages
     slabmem: i64,       // number of slab     pages
