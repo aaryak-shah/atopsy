@@ -17,7 +17,7 @@ use crate::constants::SYS_STATS_SIZE;
 use container_stats::ContStat;
 use cpu_stats::CpuStats;
 use disk_stats::DskStat;
-use flate2::read::ZlibDecoder;
+use flate2::{read::ZlibDecoder, Decompress};
 use gpu_stats::GpuStat;
 use interface_stats::{IfbStat, IntfStat};
 use last_level_cache_stats::LlcStat;
@@ -50,8 +50,14 @@ pub struct SysStats {
 impl SysStats {
     pub unsafe fn from(compressed: Vec<u8>) -> Self {
         let mut sys_stats_buffer = [0u8; SYS_STATS_SIZE];
-        let mut decompresser = ZlibDecoder::new(compressed.as_slice());
-        decompresser.read_exact(&mut sys_stats_buffer).unwrap();
+        let mut decompresser = Decompress::new(true);
+        decompresser
+            .decompress(
+                &compressed.as_slice(),
+                &mut sys_stats_buffer,
+                flate2::FlushDecompress::None,
+            )
+            .unwrap();
         std::mem::transmute(sys_stats_buffer)
     }
 }
