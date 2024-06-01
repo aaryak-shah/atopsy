@@ -9,7 +9,7 @@ use std::{
 use sys_stats::SysStats;
 use utsname::UTSName;
 
-use crate::constants::{MAGIC, RAW_HEADER_SIZE, RAW_RECORD_SIZE, SYS_STATS_SIZE};
+use crate::constants::{MAGIC, RAW_HEADER_SIZE, RAW_RECORD_SIZE};
 
 #[derive(Debug)]
 #[repr(C)]
@@ -91,7 +91,9 @@ fn read_raw_record(reader: &mut BufReader<File>) -> RawRecord {
 fn read_sys_stats(reader: &mut BufReader<File>, compressed_length: u32) -> SysStats {
     let mut compressed_stats_buffer = Vec::<u8>::new();
     compressed_stats_buffer.resize(compressed_length as usize, 0u8);
-    reader.read_exact(compressed_stats_buffer.as_mut_slice());
+    reader
+        .read_exact(compressed_stats_buffer.as_mut_slice())
+        .unwrap();
     unsafe { SysStats::from(compressed_stats_buffer) }
 }
 
@@ -108,5 +110,6 @@ pub fn parse_raw_file(file_path: &str) {
     loop {
         let raw_record = read_raw_record(&mut buf_reader);
         let sys_stats = read_sys_stats(&mut buf_reader, raw_record.sys_stats_compressed_length);
+        break;
     }
 }

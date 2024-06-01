@@ -1,7 +1,7 @@
 #[derive(Debug)]
 #[repr(C)]
-struct PerIntf {
-    name: [char; 16],
+pub struct PerIntf {
+    name: [i8; 16],
     rbyte: i64,
     rpack: i64,
     rerrs: i64,
@@ -20,10 +20,10 @@ struct PerIntf {
     scarrier: i64,
     scompr: i64,
     sfuture: [i64; 4],
-    type_: char,
-    speed: i32,
-    speedp: i32,
-    duplex: char,
+    type_: i8,
+    speed: i64,
+    speedp: i64,
+    duplex: i8,
     cfuture: [i64; 4],
 }
 
@@ -37,7 +37,7 @@ pub struct IntfStat {
 #[derive(Debug)]
 #[repr(C)]
 struct PerIfb {
-    ibname: [char; 12],
+    ibname: [i8; 12],
     portnr: i16,
     lanes: i16,
     rate: i64,

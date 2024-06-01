@@ -33,7 +33,7 @@ struct Client {
 #[derive(Debug)]
 #[repr(C)]
 struct PerNfsMount {
-    mountdev: [char; 128],
+    mountdev: [i8; 128],
     age: i64,
     bytesread: i64,
     byteswrite: i64,

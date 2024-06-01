@@ -1,8 +1,8 @@
 #[derive(Debug)]
 #[repr(C)]
 struct PerContainer {
-    ctid: u32,
-    numproc: u32,
+    ctid: u64,
+    numproc: u64,
     system: i64,
     user: i64,
     nice: i64,

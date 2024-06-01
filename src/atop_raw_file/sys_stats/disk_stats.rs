@@ -1,7 +1,7 @@
 #[derive(Debug)]
 #[repr(C)]
 struct PerDsk {
-    name: [char; 32],
+    name: [i8; 32],
     nread: i64,
     nrsect: i64,
     nwrite: i64,

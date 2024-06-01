@@ -3,8 +3,8 @@
 struct PerGpu {
     taskstats: i8, // using i8 to represent a bool
     nrprocs: u8,
-    type_: [char; 13],
-    busid: [char; 13],
+    type_: [i8; 13],
+    busid: [i8; 13],
     gpunr: i32,
     gpupercnow: i32,
     mempercnow: i32,
