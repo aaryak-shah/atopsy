@@ -10,21 +10,34 @@ struct FreqInfo {
 
 #[derive(Debug)]
 #[repr(C)]
-struct PerCpuStats {
+pub struct PerCpuStats {
     cpu_number: i32,
-    sys_time: i64,
-    user_time: i64,
-    nice_time: i64,
-    idle_time: i64,
-    io_wait_time: i64,
-    irq_time: i64,
-    soft_irq_time: i64,
-    steal_time: i64,
-    guest_time: i64,
+    pub sys_time: i64,
+    pub user_time: i64,
+    pub nice_time: i64,
+    pub idle_time: i64,
+    pub io_wait_time: i64,
+    pub irq_time: i64,
+    pub soft_irq_time: i64,
+    pub steal_time: i64,
+    pub guest_time: i64,
     freq_info: FreqInfo,
     instructions: i64,
     cycles: i64,
     cfuture: [i64; 6],
+}
+
+impl PerCpuStats {
+    pub fn total_cpu_time(&self) -> i64 {
+        self.sys_time
+            + self.user_time
+            + self.idle_time
+            + self.nice_time
+            + self.io_wait_time
+            + self.irq_time
+            + self.soft_irq_time
+            + self.steal_time
+    }
 }
 
 #[derive(Debug)]
@@ -38,6 +51,6 @@ pub struct CpuStats {
     load_avg_5m: f32,
     load_avg_15m: f32,
     cfuture: [i64; 4],
-    net_cpu_stats: PerCpuStats,
+    pub net_cpu_stats: PerCpuStats,
     per_cpu_stats: [PerCpuStats; MAX_CPU_COUNT],
 }

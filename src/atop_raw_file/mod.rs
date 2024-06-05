@@ -2,13 +2,22 @@ pub mod sys_stats;
 pub mod utsname;
 
 use std::{
-    fs::File, io::{BufReader, Read}, mem::size_of
+    fs::File,
+    io::{BufReader, Read},
+    mem::size_of,
 };
 
 use sys_stats::SysStats;
 use utsname::UTSName;
 
-use crate::constants::{MAGIC, RAW_HEADER_SIZE, RAW_RECORD_SIZE};
+use crate::{
+    constants::{MAGIC, RAW_HEADER_SIZE, RAW_RECORD_SIZE},
+    rules::{
+        cpu_rule::{self, CpuInstantRule},
+        engine::{RuleEngine, RuleEngineItem, Tag},
+        RuleGroup,
+    },
+};
 
 #[derive(Debug)]
 #[repr(C)]
@@ -114,7 +123,16 @@ pub fn parse_raw_file(file_path: &str) {
             panic!("mismatching length {}", raw_header.sys_stats_length)
         }
 
-        println!("{:#?}", (sys_stats.mem_stats.physmem) * (raw_header.page_size as i64 / 1024) /1024);
+        let cpu_rule = CpuInstantRule::new(sys_stats.cpu_stats);
+        let rule_group = RuleGroup::new(vec![(1, Box::new(cpu_rule))]);
+        let rule_engine_item = RuleEngineItem::new(1, rule_group, Tag::from("CPU bad"));
+        let mut rule_engine = RuleEngine::new(vec![rule_engine_item]);
+        let tags = rule_engine.step();
+        println!("tags: {:?}", tags);
+        // println!(
+        //     "{:#?}",
+        //     (sys_stats.mem_stats.physmem) * (raw_header.page_size as i64 / 1024) / 1024
+        // );
         break;
     }
 }
