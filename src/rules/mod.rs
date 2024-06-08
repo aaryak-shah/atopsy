@@ -1,29 +1,68 @@
-use crate::atop_raw_file::sys_stats::{self, SysStats};
+use crate::atop_raw_file::sys_stats::SysStats;
 
 pub mod cpu_rule;
 pub mod engine;
 
-pub trait Rule {
-    fn calculate_score(&mut self) -> u64;
-    // fn set_data(&mut self, sys_stats: &SysStats);
+pub trait InstantRule {
+    fn new(threshold: f64) -> Self
+    where
+        Self: Sized;
+    fn calculate_score(&mut self, data: &SysStats) -> f64;
 }
 
-pub struct RuleGroup {
-    rules: Vec<(u64, Box<dyn Rule>)>,
+pub trait WindowRule {
+    fn new(threshold: f64) -> Self
+    where
+        Self: Sized;
+    fn calculate_score(&mut self, data: &[SysStats]) -> f64;
 }
 
-impl RuleGroup {
-    pub fn new(rules: Vec<(u64, Box<dyn Rule>)>) -> Self {
-        RuleGroup { rules }
+enum RuleType {
+    Instant(Box<dyn InstantRule>),
+    Window(Box<dyn WindowRule>),
+}
+
+pub struct WeightedRule {
+    weight: f64,
+    rule: RuleType,
+}
+
+impl WeightedRule {
+    pub fn new(weight: f64, rule: RuleType) -> Self {
+        WeightedRule { weight, rule }
     }
 }
 
-impl Rule for RuleGroup {
-    fn calculate_score(&mut self) -> u64 {
-        let mut total = 0;
-        for (weight, rule) in self.rules.iter_mut() {
-            total += *weight * rule.calculate_score();
+pub struct RuleGroup {
+    threshold: f64,
+    rules: Vec<WeightedRule>,
+}
+
+impl RuleGroup {
+    fn with_rules(threshold: f64, rules: Vec<WeightedRule>) -> Self {
+        RuleGroup { threshold, rules }
+    }
+}
+
+impl WindowRule for RuleGroup {
+    fn new(threshold: f64) -> Self {
+        RuleGroup {
+            threshold,
+            rules: vec![],
         }
-        total
+    }
+
+    fn calculate_score(&mut self, data: &[SysStats]) -> f64 {
+        let mut total = 0.0;
+        for weighted_rule in self.rules.iter_mut() {
+            let rule = &mut weighted_rule.rule;
+            let weight = &weighted_rule.weight;
+
+            match rule {
+                RuleType::Instant(r) => total += weight * r.calculate_score(data.last().unwrap()),
+                RuleType::Window(r) => total += weight * r.calculate_score(data),
+            }
+        }
+        total.try_into().unwrap()
     }
 }

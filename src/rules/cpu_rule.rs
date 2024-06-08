@@ -1,24 +1,20 @@
-use std::time::{Duration, Instant};
-
-use super::Rule;
-use crate::atop_raw_file::sys_stats::cpu_stats::CpuStats;
+use super::InstantRule;
+use crate::atop_raw_file::sys_stats::SysStats;
 
 pub struct CpuInstantRule {
-    cpu_stats: CpuStats,
-}
-
-impl CpuInstantRule {
-    pub fn new(cpu_stats: CpuStats) -> Self {
-        CpuInstantRule { cpu_stats }
-    }
+    threshold: f64,
 }
 
 const THRESHOLD: f64 = 0.1;
 
-impl Rule for CpuInstantRule {
-    fn calculate_score(&mut self) -> u64 {
+impl InstantRule for CpuInstantRule {
+    fn new(threshold: f64) -> Self {
+        CpuInstantRule { threshold }
+    }
+
+    fn calculate_score(&mut self, data: &SysStats) -> u64 {
         let mut score = 0;
-        let net_stats = &self.cpu_stats.net_cpu_stats;
+        let net_stats = data.cpu_stats.net_cpu_stats;
         let idle_ratio = net_stats.idle_time as f64 / net_stats.total_cpu_time() as f64;
         let cpu_busy_ratio = 1f64 - idle_ratio;
         if cpu_busy_ratio > THRESHOLD {

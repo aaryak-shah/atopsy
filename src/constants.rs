@@ -4,3 +4,6 @@ pub const SYS_STATS_SIZE: usize = 1064016;
 pub const UTSNAME_FIELD_SIZE: usize = 65;
 pub const MAGIC: u32 = 0xFEEDBEEF;
 pub const MAX_CPU_COUNT: usize = 2048;
+
+// thresholds
+pub const CPU_THRESHOLD: f64 = 0.5;

@@ -2,24 +2,20 @@ use std::collections::HashMap;
 
 use crate::{
     atop_raw_file::sys_stats::SysStats,
+    constants::CPU_THRESHOLD,
     types::{ByteOffset, Tag, UnixTimeStamp},
 };
 
-use super::{cpu_rule::CpuInstantRule, Rule, RuleGroup};
+use super::{cpu_rule::CpuInstantRule, InstantRule, RuleGroup, RuleType, WeightedRule, WindowRule};
 
 pub struct RuleEngineItem {
-    threshold: u64,
     rule_group: RuleGroup,
     tag: Tag,
 }
 
 impl RuleEngineItem {
-    pub fn new(threshold: u64, rule_group: RuleGroup, tag: Tag) -> Self {
-        RuleEngineItem {
-            threshold,
-            rule_group,
-            tag,
-        }
+    pub fn new(rule_group: RuleGroup, tag: Tag) -> Self {
+        RuleEngineItem { rule_group, tag }
     }
 }
 
@@ -31,10 +27,20 @@ pub struct RuleEngine {
 
 impl RuleEngine {
     pub fn new(
-        rule_items: Vec<RuleEngineItem>,
         stats: Vec<(UnixTimeStamp, SysStats)>,
         offsets: HashMap<UnixTimeStamp, ByteOffset>,
     ) -> Self {
+        let rule_items: Vec<RuleEngineItem> = vec![RuleEngineItem::new(
+            RuleGroup::with_rules(
+                CPU_THRESHOLD,
+                vec![WeightedRule::new(
+                    1.0,
+                    RuleType::Instant(Box::new(CpuInstantRule::new(CPU_THRESHOLD))),
+                )],
+            ),
+            String::from("cpu"),
+        )];
+
         RuleEngine {
             rule_items,
             stats,
@@ -42,10 +48,10 @@ impl RuleEngine {
         }
     }
 
-    fn step(&mut self) -> Vec<Tag> {
+    fn step(&mut self, data: &SysStats) -> Vec<Tag> {
         let mut tags: Vec<Tag> = vec![];
         for item in self.rule_items.iter_mut() {
-            if item.rule_group.calculate_score() >= item.threshold {
+            if item.rule_group.calculate_score(data) >= item.threshold {
                 tags.push(item.tag.clone());
             }
         }
