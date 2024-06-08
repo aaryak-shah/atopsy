@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Ipv4Stats {
     forwarding: i64,
@@ -22,7 +22,7 @@ struct Ipv4Stats {
     frag_creates: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Icmpv4Stats {
     in_msgs: i64,
@@ -54,7 +54,7 @@ struct Icmpv4Stats {
     out_addr_mask_reps: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Udpv4Stats {
     in_datagrams: i64,
@@ -63,7 +63,7 @@ struct Udpv4Stats {
     out_datagrams: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Ipv6Stats {
     ip6_in_receives: i64,
@@ -90,7 +90,7 @@ struct Ipv6Stats {
     ip6_out_mcast_pkts: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Icmpv6Stats {
     icmp6_in_msgs: i64,
@@ -123,7 +123,7 @@ struct Icmpv6Stats {
     icmp6_out_group_memb_reductions: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Udpv6Stats {
     udp6_in_datagrams: i64,
@@ -132,7 +132,7 @@ struct Udpv6Stats {
     udp6_out_datagrams: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct TcpStats {
     rto_algorithm: i64,
@@ -152,7 +152,7 @@ struct TcpStats {
     in_csum_errors: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct NetStats {
     ipv4: Ipv4Stats,

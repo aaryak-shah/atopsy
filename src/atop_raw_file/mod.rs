@@ -2,8 +2,9 @@ pub mod sys_stats;
 pub mod utsname;
 
 use std::{
+    collections::HashMap,
     fs::File,
-    io::{BufReader, Read},
+    io::{BufReader, Read, Seek, SeekFrom},
     mem::size_of,
 };
 
@@ -12,14 +13,10 @@ use utsname::UTSName;
 
 use crate::{
     constants::{MAGIC, RAW_HEADER_SIZE, RAW_RECORD_SIZE},
-    rules::{
-        cpu_rule::{self, CpuInstantRule},
-        engine::{RuleEngine, RuleEngineItem, Tag},
-        RuleGroup,
-    },
+    types::{ByteOffset, UnixTimeStamp},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct RawHeader {
     pub magic: u32,
@@ -50,7 +47,7 @@ impl RawHeader {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct RawRecord {
     current_time: i64,
@@ -115,24 +112,25 @@ pub fn parse_raw_file(file_path: &str) {
     let raw_header = read_raw_header(&mut buf_reader);
     assert_eq!(raw_header.magic, MAGIC, "File is corrupted");
 
+    let mut stats: Vec<(UnixTimeStamp, SysStats)> = Vec::new();
+    let mut offsets: HashMap<UnixTimeStamp, ByteOffset> = HashMap::new();
+
     loop {
         let raw_record = read_raw_record(&mut buf_reader);
         let sys_stats = read_sys_stats(&mut buf_reader, raw_record.sys_stats_compressed_length);
 
-        if (raw_header.sys_stats_length != size_of::<SysStats>() as u32) {
+        if raw_header.sys_stats_length != size_of::<SysStats>() as u32 {
             panic!("mismatching length {}", raw_header.sys_stats_length)
         }
 
-        let cpu_rule = CpuInstantRule::new(sys_stats.cpu_stats);
-        let rule_group = RuleGroup::new(vec![(1, Box::new(cpu_rule))]);
-        let rule_engine_item = RuleEngineItem::new(1, rule_group, Tag::from("CPU bad"));
-        let mut rule_engine = RuleEngine::new(vec![rule_engine_item]);
-        let tags = rule_engine.step();
-        println!("tags: {:?}", tags);
-        // println!(
-        //     "{:#?}",
-        //     (sys_stats.mem_stats.physmem) * (raw_header.page_size as i64 / 1024) / 1024
-        // );
+        stats.push((raw_record.current_time, sys_stats));
+        let current_pos = buf_reader.seek(SeekFrom::Current(0)).unwrap();
+        offsets.insert(
+            raw_record.current_time,
+            current_pos
+                - (raw_record.sys_stats_compressed_length as ByteOffset)
+                - (size_of::<RawRecord>() as ByteOffset),
+        );
         break;
     }
 }

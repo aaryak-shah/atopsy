@@ -1,8 +1,11 @@
+use crate::atop_raw_file::sys_stats::{self, SysStats};
+
 pub mod cpu_rule;
 pub mod engine;
 
 pub trait Rule {
     fn calculate_score(&mut self) -> u64;
+    // fn set_data(&mut self, sys_stats: &SysStats);
 }
 
 pub struct RuleGroup {

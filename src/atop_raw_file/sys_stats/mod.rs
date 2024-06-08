@@ -28,7 +28,7 @@ use numa_stats::{CpuNuma, MemNuma};
 use pressure::Pressure;
 use www_stats::WwwStat;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct SysStats {
     pub cpu_stats: CpuStats,

@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct PerGpu {
     taskstats: i8, // using i8 to represent a bool
@@ -16,7 +16,7 @@ struct PerGpu {
     memusecum: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct GpuStat {
     nrgpus: i32,

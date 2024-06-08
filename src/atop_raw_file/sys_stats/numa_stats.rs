@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct MemPerNuma {
     numanr: i32,
@@ -17,14 +17,14 @@ struct MemPerNuma {
     cfuture: [i64; 2],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct MemNuma {
     nrnuma: i64,
     numa: [MemPerNuma; 1024],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct CpuPerNuma {
     numanr: i32,
@@ -41,7 +41,7 @@ struct CpuPerNuma {
     cfuture: [i64; 2],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct CpuNuma {
     nrnuma: i64,

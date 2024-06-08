@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct PerContainer {
     ctid: u64,
@@ -10,7 +10,7 @@ struct PerContainer {
     physpages: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct ContStat {
     nrcontainer: i32,

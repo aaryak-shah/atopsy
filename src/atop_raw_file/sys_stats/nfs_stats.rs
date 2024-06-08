@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Server {
     netcnt: i64,
@@ -19,7 +19,7 @@ struct Server {
     future: [i64; 8],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Client {
     rpccnt: i64,
@@ -30,7 +30,7 @@ struct Client {
     future: [i64; 8],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct PerNfsMount {
     mountdev: [i8; 128],
@@ -46,14 +46,14 @@ struct PerNfsMount {
     future: [i64; 8],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct NfsMounts {
     nrmounts: i32,
     nfsmnt: [PerNfsMount; 64],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct NfsStat {
     server: Server,

@@ -1,6 +1,6 @@
 use crate::{constants::UTSNAME_FIELD_SIZE, utils};
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct UTSName {
     sys_name: [u8; UTSNAME_FIELD_SIZE],

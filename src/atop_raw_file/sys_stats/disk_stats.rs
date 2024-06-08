@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct PerDsk {
     pub name: [i8; 32],
@@ -14,7 +14,7 @@ pub struct PerDsk {
     cfuture: [i64; 3],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct DskStat {
     ndsk: i32,

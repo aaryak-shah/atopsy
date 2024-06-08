@@ -1,6 +1,6 @@
 use crate::constants::MAX_CPU_COUNT;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct FreqInfo {
     max_frequency_mhz: i64,
@@ -8,7 +8,7 @@ struct FreqInfo {
     ticks: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct PerCpuStats {
     cpu_number: i32,
@@ -40,7 +40,7 @@ impl PerCpuStats {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct CpuStats {
     pub cpu_count: i64,

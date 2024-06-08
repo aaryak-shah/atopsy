@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct PerLlc {
     id: u8,
@@ -7,7 +7,7 @@ struct PerLlc {
     mbm_total: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct LlcStat {
     nrllcs: i32,

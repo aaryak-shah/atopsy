@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct Psi {
     avg10: f32,
@@ -7,7 +7,7 @@ struct Psi {
     total: i64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct Pressure {
     present: i8, // using i8 to represent a bool

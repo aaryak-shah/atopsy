@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct PerIntf {
     pub name: [i8; 16],
@@ -27,14 +27,14 @@ pub struct PerIntf {
     cfuture: [i64; 4],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct IntfStat {
     nrintf: i32,
     pub intf: [PerIntf; 128],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 struct PerIfb {
     ibname: [i8; 12],
@@ -48,7 +48,7 @@ struct PerIfb {
     cfuture: [i64; 4],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct IfbStat {
     nrports: i32,
