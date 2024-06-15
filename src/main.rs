@@ -3,6 +3,7 @@ pub mod constants;
 pub mod rules;
 pub mod types;
 pub mod utils;
+pub mod transforms;
 
 fn main() {
     let file_path = "./atop-new.raw";
