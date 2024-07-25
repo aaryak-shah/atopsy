@@ -19,3 +19,12 @@
 ### Pressure Rules
 
 1. Pressure above threshold [@Instant]
+
+### Top - Down Planning
+1. Rule Engine - 
+    Responbile for creating instant and window\
+    Instant Rule - threshold, Calculate Score\
+    Window Rule - threshold, Calculate Score over a slice\
+
+2. Cpu Rule - 
+    CPU Usage - 

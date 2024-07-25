@@ -14,7 +14,8 @@ pub trait WindowRule {
     fn new(threshold: f64) -> Self
     where
         Self: Sized;
-    fn calculate_score(&mut self, data: &[SysStats]) -> f64;
+    fn calculate_score(&mut self, window: &[SysStats]) -> f64;
+    fn get_window_size(&self) -> usize;
 }
 
 enum RuleType {
@@ -50,6 +51,10 @@ impl WindowRule for RuleGroup {
             threshold,
             rules: vec![],
         }
+    }
+
+    fn get_window_size(&self) -> usize {
+        todo!()
     }
 
     fn calculate_score(&mut self, data: &[SysStats]) -> f64 {
