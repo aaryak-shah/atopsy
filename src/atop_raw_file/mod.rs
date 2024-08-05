@@ -16,6 +16,11 @@ use crate::{
     types::{ByteOffset, UnixTimeStamp},
 };
 
+pub struct TimestampData<T> {
+    pub value: T,
+    pub timestamp: f64,
+}
+
 #[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct RawHeader {
@@ -50,7 +55,7 @@ impl RawHeader {
 #[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub struct RawRecord {
-    current_time: i64,
+    pub current_time: i64,
     flags: u16,
     num_cgroups: u16,
     sfuture: [u16; 2],
