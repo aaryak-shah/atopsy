@@ -18,7 +18,7 @@ use crate::{
 
 pub struct TimestampData<T> {
     pub value: T,
-    pub timestamp: f64,
+    pub timestamp: UnixTimeStamp,
 }
 
 #[derive(Debug, Copy, Clone)]

@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, Sub};
 
-use crate::atop_raw_file::TimestampData;
+use crate::{atop_raw_file::TimestampData, types::UnixTimeStamp};
 
 pub fn mean<T>(values: impl Iterator<Item = T>) -> Result<f64, String>
 where
@@ -20,11 +20,6 @@ where
 
     Ok(sum / count)
 }
-
-// pub fn sum<, T>(values: & impl Iterator<Item = T>) -> T
-// where T:std::iter::Sum<T> {
-//     values.sum()
-// }
 
 pub fn median<T>(values: impl Iterator<Item = T>) -> Result<T, String>
 where
@@ -171,14 +166,14 @@ where
     T: Sub<Output = T> + Div<f64, Output = f64> + Copy,
 {
     let values: Vec<T> = data.clone().map(|d| d.value).collect();
-    let timesteps: Vec<f64> = data.map(|d| d.timestamp).collect();
+    let timesteps: Vec<UnixTimeStamp> = data.map(|d| d.timestamp).collect();
 
     let mut diffs: Vec<T> = Vec::with_capacity(values.len() - 1);
     let mut time_diffs: Vec<f64> = Vec::with_capacity(timesteps.len() - 1);
 
     for i in 0..timesteps.len() - 1 {
         diffs.push(values[i + 1] - values[i]);
-        time_diffs.push(timesteps[i + 1] - timesteps[i]);
+        time_diffs.push((timesteps[i + 1] - timesteps[i]) as f64);
     }
 
     divide(diffs.into_iter(), time_diffs.into_iter())

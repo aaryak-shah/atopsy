@@ -1,26 +1,28 @@
 use super::{InstantRule, WindowRule};
 use crate::{
     atop_raw_file::{sys_stats::SysStats, TimestampData},
-    constants::CPU_THRESHOLD,
     transforms::{is_above_threshold, rate_of_change},
+    types::Tag,
 };
 
 pub struct CpuInstantRule {
     threshold: f64,
+    tag: Tag,
 }
 
 pub struct CpuWindowRule {
     threshold: f64,
+    tag: Tag,
 }
 
 const THRESHOLD: f64 = 0.1;
 
 impl InstantRule for CpuInstantRule {
-    fn new(threshold: f64) -> Self {
-        CpuInstantRule { threshold }
+    fn new(threshold: f64, tag: Tag) -> Self {
+        CpuInstantRule { threshold, tag }
     }
 
-    fn calculate_score(&mut self, data: &TimestampData<SysStats>) -> Result<f64, String> {
+    fn calculate_score(&self, data: &TimestampData<SysStats>) -> Result<f64, String> {
         let mut score: f64 = 0f64;
         let net_stats = data.value.cpu_stats.net_cpu_stats;
         let idle_ratio = net_stats.idle_time as f64 / net_stats.total_cpu_time() as f64;
@@ -33,18 +35,26 @@ impl InstantRule for CpuInstantRule {
 
         Ok(score)
     }
+
+    fn get_tag(&self) -> Tag {
+        String::from("")
+    }
+
+    fn get_threshold(&self) -> f64 {
+        0.5
+    }
 }
 
 impl WindowRule for CpuWindowRule {
-    fn new(threshold: f64) -> Self {
-        CpuWindowRule { threshold }
+    fn new(threshold: f64, tag: Tag) -> Self {
+        CpuWindowRule { threshold, tag }
     }
 
     fn get_window_size(&self) -> usize {
         5
     }
 
-    fn calculate_score(&mut self, window: &[TimestampData<SysStats>]) -> Result<f64, String> {
+    fn calculate_score(&self, window: &[TimestampData<SysStats>]) -> Result<f64, String> {
         for rate in rate_of_change(window.iter().map(|data| {
             let net_stats = data.value.cpu_stats.net_cpu_stats;
             let idle_ratio = net_stats.idle_time as f64 / net_stats.total_cpu_time() as f64;
@@ -59,5 +69,13 @@ impl WindowRule for CpuWindowRule {
             }
         }
         Ok(0f64)
+    }
+
+    fn get_tag(&self) -> Tag {
+        String::from("")
+    }
+
+    fn get_threshold(&self) -> f64 {
+        0.5
     }
 }
