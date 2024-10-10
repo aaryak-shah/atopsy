@@ -99,9 +99,12 @@ impl RuleEngine {
 
     pub fn run(&mut self) {
         for (index, time_stamp_data) in self.timestamped_stats.iter().enumerate() {
-            self.step(index, &self.timestamped_stats);
+            let tags = self.step(index, &self.timestamped_stats);
+            println!(
+                "TIMESTAMP: {} | TAGS: {:?}",
+                time_stamp_data.get_timestamp(),
+                tags
+            )
         }
-        todo!("MAKE SHIT RUN");
-        todo!("TIMESTAMPS WHERE???");
     }
 }

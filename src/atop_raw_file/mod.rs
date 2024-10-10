@@ -6,8 +6,10 @@ use std::{
     fs::File,
     io::{BufReader, Read, Seek, SeekFrom},
     mem::size_of,
+    time::{Duration, UNIX_EPOCH},
 };
 
+use chrono::{DateTime, Utc};
 use sys_stats::SysStats;
 use utsname::UTSName;
 
@@ -19,6 +21,19 @@ use crate::{
 pub struct TimestampData<T> {
     pub value: T,
     pub timestamp: UnixTimeStamp,
+}
+
+impl<T> TimestampData<T> {
+    pub fn new(timestamp: UnixTimeStamp, value: T) -> Self {
+        TimestampData { value, timestamp }
+    }
+
+    pub fn get_timestamp(&self) -> String {
+        let duration_since_epoch = UNIX_EPOCH + Duration::from_secs(self.timestamp as u64);
+        let datetime = DateTime::<Utc>::from(duration_since_epoch);
+
+        datetime.to_rfc2822()
+    }
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -107,7 +122,12 @@ fn read_sys_stats(reader: &mut BufReader<File>, compressed_length: u32) -> SysSt
     unsafe { SysStats::from(compressed_stats_buffer) }
 }
 
-pub fn parse_raw_file(file_path: &str) {
+pub fn parse_raw_file(
+    file_path: &str,
+) -> (
+    Vec<TimestampData<SysStats>>,
+    HashMap<UnixTimeStamp, ByteOffset>,
+) {
     // load file descriptor
     let raw_file = File::open(file_path).unwrap();
 
@@ -117,7 +137,7 @@ pub fn parse_raw_file(file_path: &str) {
     let raw_header = read_raw_header(&mut buf_reader);
     assert_eq!(raw_header.magic, MAGIC, "File is corrupted");
 
-    let mut stats: Vec<(UnixTimeStamp, SysStats)> = Vec::new();
+    let mut stats: Vec<TimestampData<SysStats>> = Vec::new();
     let mut offsets: HashMap<UnixTimeStamp, ByteOffset> = HashMap::new();
 
     loop {
@@ -128,7 +148,7 @@ pub fn parse_raw_file(file_path: &str) {
             panic!("mismatching length {}", raw_header.sys_stats_length)
         }
 
-        stats.push((raw_record.current_time, sys_stats));
+        stats.push(TimestampData::new(raw_record.current_time, sys_stats));
         let current_pos = buf_reader.seek(SeekFrom::Current(0)).unwrap();
         offsets.insert(
             raw_record.current_time,
@@ -136,6 +156,9 @@ pub fn parse_raw_file(file_path: &str) {
                 - (raw_record.sys_stats_compressed_length as ByteOffset)
                 - (size_of::<RawRecord>() as ByteOffset),
         );
-        break;
+
+        let temp_skip_ahead = raw_record.proc_stats_compressed_length + raw_record.cgroup_stats_compressed_length + raw_record.pidlist_compressed_length;
     }
+
+    (stats, offsets)
 }

@@ -6,4 +6,4 @@ pub const MAGIC: u32 = 0xFEEDBEEF;
 pub const MAX_CPU_COUNT: usize = 2048;
 
 // thresholds
-pub const CPU_THRESHOLD: f64 = 0.5;
+pub const CPU_THRESHOLD: f64 = 0.0;

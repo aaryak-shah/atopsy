@@ -1,3 +1,5 @@
+use std::cmp::min;
+
 use crate::{
     atop_raw_file::{sys_stats::SysStats, TimestampData},
     types::Tag,
@@ -92,7 +94,7 @@ impl RuleGroup {
                 RuleType::Instant(r) => (r.calculate_score(data.last().unwrap())?, r.get_tag()),
                 RuleType::Window(r) => {
                     let window_size = r.get_window_size();
-                    let window = &data[..window_size];
+                    let window = &data[..min(1, window_size)];
                     (r.calculate_score(&window)?, r.get_tag())
                 }
             };

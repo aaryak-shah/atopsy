@@ -15,7 +15,7 @@ pub struct CpuWindowRule {
     tag: Tag,
 }
 
-const THRESHOLD: f64 = 0.1;
+const THRESHOLD: f64 = 0.0;
 
 impl InstantRule for CpuInstantRule {
     fn new(threshold: f64, tag: Tag) -> Self {
